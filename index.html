@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Ohm's Law Simulation - Fixed</title>
+    <title>Ohm's Law Simulator - Fixed Rotation</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -11,12 +11,12 @@
     <div class="side-panel">
         <div class="card">
             <h4>Instruction:</h4>
-            <p>Lengkapi sirkuit dan tentukan nilai V dan R agar LED menyala (Target: 200 mA).</p>
+            <p>Lengkapi sirkuit dan klik <b>Generate</b>. Target arus: 200 mA.</p>
             <div class="legend-list">
-                <div class="legend-item"><span class="dot low"></span> Low Current</div>
-                <div class="legend-item"><span class="dot med"></span> Medium Current</div>
-                <div class="legend-item"><span class="dot high"></span> High Current</div>
-                <div class="legend-item"><span class="dot over"></span> Over Current/Burnout</div>
+                <div class="legend-item"><span class="dot low"></span> Low (< 50mA)</div>
+                <div class="legend-item"><span class="dot med"></span> Medium (50-150mA)</div>
+                <div class="legend-item"><span class="dot high"></span> Perfect (150-200mA)</div>
+                <div class="legend-item"><span class="dot over"></span> Burnout (> 200mA)</div>
             </div>
         </div>
     </div>
@@ -26,24 +26,26 @@
             <svg viewBox="0 0 400 300" class="circuit-svg">
                 <path d="M 100 200 L 100 50 L 160 50 M 240 50 L 300 50 L 300 120 M 300 180 L 300 250 L 100 250 L 100 200" 
                       fill="none" stroke="#333" stroke-width="3" />
+                
                 <g transform="translate(85, 170)">
                     <rect x="0" y="0" width="30" height="40" fill="#2c3e50" rx="2"/>
                     <rect x="5" y="-5" width="20" height="5" fill="#f1c40f"/>
                     <text x="10" y="25" fill="white" font-size="12" font-weight="bold">V</text>
                 </g>
-                <text x="175" y="30" class="label-text">R: <tspan id="r-val-label">0</tspan> Ohm</text>
-                <text x="315" y="155" class="label-text">LED</text>
-                <text x="180" y="280" class="label-text">Current: <tspan id="i-val-label">0</tspan> mA</text>
+
+                <text x="160" y="30" class="label-text">R: <tspan id="r-display">0</tspan> Ω</text>
+                <text x="320" y="155" class="label-text">LED</text>
+                <text x="140" y="285" class="label-text">Current: <tspan id="i-display">0.00</tspan> mA</text>
             </svg>
 
             <div class="drop-zone" id="slot-resistor" data-type="resistor" style="top: 50px; left: 200px;"></div>
-            <div class="drop-zone" id="slot-led" data-type="led" style="top: 150px; left: 300px;"></div>
+            <div class="drop-zone rotated-led" id="slot-led" data-type="led" style="top: 150px; left: 300px;"></div>
         </div>
 
         <div class="input-card">
             <div class="inputs">
-                <input type="number" id="v-input" placeholder="Volt (V)">
-                <input type="number" id="r-input" placeholder="Ohm (R)">
+                <input type="number" id="v-input" placeholder="Volt (V)" value="12">
+                <input type="number" id="r-input" placeholder="Ohm (R)" value="100">
             </div>
             <button id="btn-generate">Generate</button>
         </div>
@@ -72,12 +74,7 @@
     </div>
 </div>
 
-<div id="modal" class="modal">
-    <div class="modal-content">
-        <h2 id="modal-title">Correct!</h2>
-        <button onclick="closeModal()">OK</button>
-    </div>
-</div>
+
 
 <script src="script.js"></script>
 </body>
