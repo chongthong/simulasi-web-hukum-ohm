@@ -34,30 +34,29 @@ dropZones.forEach(zone => {
 // Hitung Hukum Ohm
 // Bagian dalam event listener btn-generate yang sudah diperbarui:
 btnGenerate.addEventListener('click', () => {
-    if (!state.resistor || !state.led) {
-        alert("Pasang semua komponen dulu!");
+   if (!state.resistor || !state.led) {
+        alert("Lengkapi komponen sirkuit!");
         return;
     }
 
     const V = parseFloat(document.getElementById('v-input').value);
     const R = parseFloat(document.getElementById('r-input').value);
     
-    // Update tampilan angka di sirkuit
-    document.getElementById('r-display').textContent = R;
-    
-    // Rumus Hukum Ohm: I = V / R
+    if (isNaN(V) || isNaN(R) || R <= 0) return;
+
     const I_mA = (V / R) * 1000;
-    document.getElementById('i-display').textContent = I_mA.toFixed(2);
     
-    // UPDATE TEKS ANGGKA ARUS
-    document.getElementById('r-display').textContent = R;
+    // Baris ini dihapus/dikomentari karena id="r-display" sudah tidak ada
+    // document.getElementById('r-display').textContent = R; 
+
+    // Update tampilan Arus tetap jalan
     document.getElementById('i-display').textContent = I_mA.toFixed(2);
 
-    // Update Warna LED
+    // Update Warna LED tetap jalan
     const ledBulb = document.querySelector('#slot-led .led-bulb');
     let color = "#eee";
 
-    if (I_mA > 10 && I_mA < 150) {
+    if (I_mA > 50 && I_mA < 150) {
         color = "#ffeb3b"; // Kuning Redup
     } else if (I_mA >= 150 && I_mA <= 200) {
         color = "#ff9800"; // Oranye Terang

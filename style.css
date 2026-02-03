@@ -140,23 +140,66 @@ button#btn-generate:hover {
 /* Efek saat komponen ditarik */
 .draggable {
     cursor: grab;
-    transition: transform 0.2s;
+    transition: all 0.2s ease;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 10px;
+    width: 100px; /* Ukuran area hover seragam */
+    height: 80px;
     background: #f9f9f9;
-    border-radius: 8px;
+    border-radius: 12px;
     border: 1px solid transparent;
 }
 
 .draggable:hover {
-    transform: scale(1.05);
+    transform: translateY(-3px);
     background: #ffffff;
     border-color: #00bcd4;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
 .draggable:active {
     cursor: grabbing;
+    transform: scale(0.95);
+}
+.side-panel .card {
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 8px;
+    height: 95%;
+    overflow-y: auto; /* Menambah scroll jika komponen banyak */
+    background: #fff;
+}
+
+/* Mengatur scrollbar agar terlihat modern */
+.side-panel .card::-webkit-scrollbar {
+    width: 6px;
+}
+.side-panel .card::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 10px;
+}
+
+.shelf {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 35px; /* Jarak antar ikon yang lebih lega */
+    padding: 20px 0;
+}
+
+.component-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+}
+
+.comp-name {
+    font-size: 10px;
+    font-weight: 800;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
