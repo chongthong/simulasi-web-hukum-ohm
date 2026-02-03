@@ -1,86 +1,80 @@
 const draggables = document.querySelectorAll('.draggable');
 const dropZones = document.querySelectorAll('.drop-zone');
+const controls = document.getElementById('controls');
+const resultText = document.getElementById('result-text');
 const btnGenerate = document.getElementById('btn-generate');
-const statusDisplay = document.getElementById('status-display');
-const inputArea = document.getElementById('input-area');
 
-let placedComponents = { led: false, resistor: false, battery: false };
+let state = { led: false, resistor: false, battery: false };
 
-// --- LOGIKA DRAG & DROP ---
-draggables.forEach(drag => {
-    drag.addEventListener('dragstart', (e) => {
-        e.dataTransfer.setData('text/plain', drag.id);
-        e.dataTransfer.setData('type', drag.dataset.type);
+// Drag and Drop Logic
+draggables.forEach(item => {
+    item.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('type', item.dataset.type);
+        e.dataTransfer.setData('sourceId', item.id);
     });
 });
 
 dropZones.forEach(zone => {
-    zone.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        zone.classList.add('hover');
-    });
-
-    zone.addEventListener('dragleave', () => {
-        zone.classList.remove('hover');
-    });
+    zone.addEventListener('dragover', (e) => e.preventDefault());
+    zone.addEventListener('dragover', () => zone.classList.add('hover'));
+    zone.addEventListener('dragleave', () => zone.classList.remove('hover'));
 
     zone.addEventListener('drop', (e) => {
         e.preventDefault();
         zone.classList.remove('hover');
         
-        const id = e.dataTransfer.getData('text/plain');
         const type = e.dataTransfer.getData('type');
-        const targetType = zone.dataset.type;
+        const sourceId = e.dataTransfer.getData('sourceId');
 
-        if (type === targetType) {
-            const icon = document.getElementById(id).innerText.split('\n')[0];
-            zone.innerHTML = icon;
+        if (type === zone.dataset.type) {
+            const clone = document.getElementById(sourceId).querySelector('svg').cloneNode(true);
+            zone.innerHTML = "";
+            zone.appendChild(clone);
             zone.classList.add('filled');
-            placedComponents[type] = true;
-            checkAllPlaced();
+            state[type] = true;
+            checkCircuit();
         } else {
-            alert("Komponen tidak cocok dengan slot ini!");
+            alert("Oops! Komponen tidak sesuai slot.");
         }
     });
 });
 
-function checkAllPlaced() {
-    if (placedComponents.led && placedComponents.resistor && placedComponents.battery) {
-        inputArea.style.display = 'flex';
-        statusDisplay.innerText = "Sirkuit Lengkap! Masukkan nilai V dan R.";
+function checkCircuit() {
+    if (state.led && state.resistor && state.battery) {
+        controls.classList.remove('hidden');
+        resultText.innerText = "Sirkuit Siap! Klik Generate.";
     }
 }
 
-// --- LOGIKA KALKULASI ---
+// Ohm's Law Calculation
 btnGenerate.addEventListener('click', () => {
-    if (!placedComponents.led || !placedComponents.resistor || !placedComponents.battery) {
-        alert("Lengkapi sirkuit dulu!");
-        return;
-    }
-
-    const V = parseFloat(document.getElementById('voltage').value);
-    const R = parseFloat(document.getElementById('resistance').value);
-    const ledSlot = document.getElementById('slot-led');
-
-    if (isNaN(V) || isNaN(R) || R <= 0) {
-        alert("Input tidak valid!");
+    const V = parseFloat(document.getElementById('v-val').value);
+    const R = parseFloat(document.getElementById('r-val').value);
+    
+    if (!V || !R || R <= 0) {
+        alert("Masukkan nilai V dan R (R > 0)");
         return;
     }
 
     const I_mA = (V / R) * 1000;
-    let color = "#fff";
-    let message = "";
+    const ledIcon = document.querySelector('#slot-led svg #led-bulb-icon');
+    
+    let color = "#ecf0f1"; // Default off
+    let msg = "";
 
     if (I_mA < 50) {
-        color = "#ccc"; message = "Low Current (LED Redup)";
+        color = "#bdc3c7"; msg = "Arus terlalu rendah (LED Mati)";
     } else if (I_mA < 150) {
-        color = "#ffeb3b"; message = "Medium Current";
+        color = "#f1c40f"; msg = "Arus Sedang (LED Redup)";
     } else if (I_mA <= 200) {
-        color = "#ff9800"; message = "High Current (Ideal!)";
+        color = "#f39c12"; msg = "Arus Sesuai (LED Terang)";
     } else {
-        color = "#f44336"; message = "OVER CURRENT - LED BURNOUT!";
+        color = "#c0392b"; msg = "OVER CURRENT! LED Terbakar";
     }
 
-    ledSlot.style.background = color;
-    statusDisplay.innerHTML = `Arus: <b>${I_mA.toFixed(2)} mA</b><br>${message}`;
+    // Animasi perubahan warna LED
+    ledIcon.style.fill = color;
+    ledIcon.style.transition = "fill 0.5s ease";
+    
+    resultText.innerHTML = `Arus: <span style="color:${color}">${I_mA.toFixed(2)} mA</span><br>${msg}`;
 });

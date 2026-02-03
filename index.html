@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulasi Ohm's Law - Drag & Drop</title>
+    <title>Ohm's Law Simulator - Pro Version</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="container">
+<div class="app-container">
     <div class="sidebar">
         <h3>Instruction:</h3>
-        <p>Lengkapi sirkuit dengan mendrag komponen, lalu tentukan nilai V dan R untuk menyalakan LED (200 mA).</p>
+        <p>Lengkapi sirkuit dengan menyeret komponen ke tempatnya. Tentukan nilai V dan R untuk menyalakan LED (Target: 200 mA).</p>
         <hr>
         <div class="legend"><span class="box low"></span> Low Current</div>
         <div class="legend"><span class="box med"></span> Medium Current</div>
@@ -19,38 +19,63 @@
         <div class="legend"><span class="box over"></span> Over Current/Burnout</div>
     </div>
 
-    <div class="main-content">
-        <div class="header">
-            <h1>Ohm's Law</h1>
-        </div>
+    <div class="main-stage">
+        <h1 class="title">Ohm's Law</h1>
 
-        <div class="simulation-grid">
-            <div class="circuit-area">
-                <div class="circuit-diagram">
-                    <svg width="250" height="200" viewBox="0 0 250 200">
-                        <path d="M 50 50 L 200 50 L 200 150 L 50 150 Z" fill="none" stroke="#333" stroke-width="3"/>
-                    </svg>
-                    
-                    <div class="drop-zone" id="slot-resistor" data-type="resistor" style="top: 35px; left: 100px;">R</div>
-                    <div class="drop-zone" id="slot-led" data-type="led" style="top: 85px; left: 185px;">LED</div>
-                    <div class="drop-zone" id="slot-battery" data-type="battery" style="top: 85px; left: 35px;">V</div>
-                </div>
+        <div class="workspace">
+            <div class="circuit-board">
+                <svg width="300" height="200" viewBox="0 0 300 200">
+                    <path d="M 50 50 L 250 50 L 250 150 L 50 150 Z" fill="none" stroke="#2c3e50" stroke-width="4"/>
+                    <rect x="120" y="40" width="60" height="20" fill="white" />
+                    <rect x="240" y="85" width="20" height="30" fill="white" />
+                    <rect x="40" y="85" width="20" height="30" fill="white" />
+                </svg>
 
-                <div class="inputs" id="input-area" style="display: none;">
-                    <input type="number" id="voltage" placeholder="Volt (V)">
-                    <input type="number" id="resistance" placeholder="Ohm (R)">
-                </div>
-                <button id="btn-generate">Generate</button>
-                <div id="status-display" class="status">Lengkapi komponen terlebih dahulu!</div>
+                <div class="drop-zone" id="slot-resistor" data-type="resistor" style="top: 35px; left: 120px;">R</div>
+                <div class="drop-zone" id="slot-led" data-type="led" style="top: 80px; left: 235px;">LED</div>
+                <div class="drop-zone" id="slot-battery" data-type="battery" style="top: 80px; left: 35px;">V</div>
             </div>
 
-            <div class="components-panel">
+            <div class="components-shelf">
                 <h3>Components:</h3>
-                <div class="items-box">
-                    <div class="draggable" draggable="true" id="led" data-type="led">💡<br>LED</div>
-                    <div class="draggable" draggable="true" id="resistor" data-type="resistor">🔌<br>Resistor</div>
-                    <div class="draggable" draggable="true" id="battery" data-type="battery">🔋<br>Battery</div>
+                <div class="shelf-items">
+                    <div class="draggable" draggable="true" id="comp-led" data-type="led">
+                        <svg width="40" height="40" viewBox="0 0 100 100">
+                            <path d="M30,50 Q30,20 50,20 Q70,20 70,50 L70,70 L30,70 Z" fill="#ecf0f1" stroke="#333" id="led-bulb-icon"/>
+                            <rect x="45" y="70" width="2" height="20" fill="#7f8c8d" />
+                            <rect x="53" y="70" width="2" height="20" fill="#7f8c8d" />
+                        </svg>
+                        <span>LED</span>
+                    </div>
+
+                    <div class="draggable" draggable="true" id="comp-resistor" data-type="resistor">
+                        <svg width="60" height="20" viewBox="0 0 120 40">
+                            <rect x="10" y="15" width="100" height="10" rx="5" fill="#f39c12" />
+                            <rect x="30" y="15" width="5" height="10" fill="#c0392b" />
+                            <rect x="50" y="15" width="5" height="10" fill="#2980b9" />
+                            <rect x="70" y="15" width="5" height="10" fill="#27ae60" />
+                        </svg>
+                        <span>Resistor</span>
+                    </div>
+
+                    <div class="draggable" draggable="true" id="comp-battery" data-type="battery">
+                        <svg width="40" height="40" viewBox="0 0 100 100">
+                            <rect x="30" y="30" width="40" height="50" rx="3" fill="#2c3e50" />
+                            <rect x="40" y="25" width="20" height="5" fill="#f1c40f" />
+                            <text x="43" y="65" fill="white" font-size="20">+</text>
+                        </svg>
+                        <span>Battery</span>
+                    </div>
                 </div>
+
+                <div id="controls" class="controls hidden">
+                    <div class="input-row">
+                        <label>V:</label> <input type="number" id="v-val" value="0">
+                        <label>R:</label> <input type="number" id="r-val" value="0">
+                    </div>
+                    <button id="btn-generate">Generate</button>
+                </div>
+                <div id="result-text" class="result-text">Lengkapi Sirkuit!</div>
             </div>
         </div>
     </div>
