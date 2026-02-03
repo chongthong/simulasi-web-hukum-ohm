@@ -42,12 +42,12 @@ btnGenerate.addEventListener('click', () => {
     const V = parseFloat(document.getElementById('v-input').value);
     const R = parseFloat(document.getElementById('r-input').value);
     
-    if (isNaN(V) || isNaN(R) || R <= 0) {
-        alert("Masukkan nilai yang valid!");
-        return;
-    }
-
+    // Update tampilan angka di sirkuit
+    document.getElementById('r-display').textContent = R;
+    
+    // Rumus Hukum Ohm: I = V / R
     const I_mA = (V / R) * 1000;
+    document.getElementById('i-display').textContent = I_mA.toFixed(2);
     
     // UPDATE TEKS ANGGKA ARUS
     document.getElementById('r-display').textContent = R;

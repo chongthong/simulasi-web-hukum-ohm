@@ -19,6 +19,7 @@ body { font-family: 'Arial', sans-serif; background: #9ea7ad; margin: 0; display
 #slot-resistor { width: 80px; height: 40px; border: 2px dashed #bbb; }
 #slot-led { width: 50px; height: 50px; border: 2px dashed #bbb; }
 
+
 /* Rotasi LED 90 Derajat */
 .rotated-led svg {
     transform: rotate(90deg);
@@ -34,3 +35,128 @@ button#btn-generate { background: #00bcd4; color: white; border: none; padding: 
 .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); }
 .modal-content { background: #333; color: white; margin: 15% auto; padding: 30px; width: 250px; text-align: center; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
 .modal-content button { background: #555; color: white; border: none; padding: 10px 40px; cursor: pointer; margin-top: 20px; border-radius: 4px; }
+
+/* Styling Input Card Baru */
+.input-card {
+    margin-top: 20px;
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    width: 320px; /* Ukuran disesuaikan agar rapi */
+    text-align: center;
+}
+
+.input-card h4 {
+    margin: 0 0 15px 0;
+    color: #2c3e50;
+    font-size: 16px;
+    border-bottom: 2px solid #00bcd4;
+    display: inline-block;
+    padding: 0 10px 5px 10px;
+}
+
+.inputs-wrapper {
+    display: flex;
+    justify-content: space-around;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.input-group label {
+    font-size: 11px;
+    font-weight: bold;
+    color: #7f8c8d;
+    text-transform: uppercase;
+}
+
+.input-group input {
+    width: 80px;
+    padding: 10px;
+    border: 2px solid #eee;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.input-group input:focus {
+    border-color: #00bcd4;
+}
+
+button#btn-generate {
+    background: #00bcd4;
+    color: white;
+    border: none;
+    padding: 12px;
+    width: 100%;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 15px;
+    transition: background 0.3s;
+}
+
+button#btn-generate:hover {
+    background: #00acc1;
+}
+
+/* Container rak komponen */
+.shelf {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px; /* Jarak antar komponen */
+    margin-top: 20px;
+}
+
+/* Wrapper untuk setiap pasang ikon + nama */
+.component-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+/* Gaya teks nama komponen */
+.comp-name {
+    font-size: 12px;
+    font-weight: bold;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Efek saat komponen ditarik */
+.draggable {
+    cursor: grab;
+    transition: transform 0.2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    border: 1px solid transparent;
+}
+
+.draggable:hover {
+    transform: scale(1.05);
+    background: #ffffff;
+    border-color: #00bcd4;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.draggable:active {
+    cursor: grabbing;
+}

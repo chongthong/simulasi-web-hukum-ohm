@@ -1,81 +1,142 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Ohm's Law Simulator - Fixed Rotation</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-<div class="main-container">
-    <div class="side-panel">
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="main-container">
+      <div class="side-panel">
         <div class="card">
-            <h4>Instruction:</h4>
-            <p>Lengkapi sirkuit dan klik <b>Generate</b>. Target arus: 200 mA.</p>
-            <div class="legend-list">
-                <div class="legend-item"><span class="dot low"></span> Low (< 50mA)</div>
-                <div class="legend-item"><span class="dot med"></span> Medium (50-150mA)</div>
-                <div class="legend-item"><span class="dot high"></span> Perfect (150-200mA)</div>
-                <div class="legend-item"><span class="dot over"></span> Burnout (> 200mA)</div>
+          <h4>Instruksi:</h4>
+          <p>Lengkapi sirkuit dan klik <b>Generate</b>. Target arus: 200 mA.</p>
+          <h4>Keterangan:</h4>
+          <div class="legend-list">
+            <div class="legend-item">
+              <span class="dot low"></span> Low (< 50mA)
             </div>
+            <div class="legend-item">
+              <span class="dot med"></span> Medium (50-150mA)
+            </div>
+            <div class="legend-item">
+              <span class="dot high"></span> Perfect (150-200mA)
+            </div>
+            <div class="legend-item">
+              <span class="dot over"></span> Burnout (> 200mA)
+            </div>
+          </div>
         </div>
-    </div>
+      </div>
 
-    <div class="center-panel">
+      <div class="center-panel">
         <div class="circuit-container">
-            <svg viewBox="0 0 400 300" class="circuit-svg">
-                <path d="M 100 200 L 100 50 L 160 50 M 240 50 L 300 50 L 300 120 M 300 180 L 300 250 L 100 250 L 100 200" 
-                      fill="none" stroke="#333" stroke-width="3" />
-                
-                <g transform="translate(85, 170)">
-                    <rect x="0" y="0" width="30" height="40" fill="#2c3e50" rx="2"/>
-                    <rect x="5" y="-5" width="20" height="5" fill="#f1c40f"/>
-                    <text x="10" y="25" fill="white" font-size="12" font-weight="bold">V</text>
-                </g>
+          <svg viewBox="0 0 400 300" class="circuit-svg">
+            <path
+              d="M 100 200 L 100 50 L 160 50 M 240 50 L 300 50 L 300 135 M 300 165 L 300 250 L 100 250 L 100 200"
+              fill="none"
+              stroke="#333"
+              stroke-width="3"
+            />
 
-                <text x="160" y="30" class="label-text">R: <tspan id="r-display">0</tspan> Ω</text>
-                <text x="320" y="155" class="label-text">LED</text>
-                <text x="140" y="285" class="label-text">Current: <tspan id="i-display">0.00</tspan> mA</text>
-            </svg>
+            <g transform="translate(85, 170)">
+              <rect
+                x="0"
+                y="-30"
+                width="30"
+                height="40"
+                fill="#2c3e50"
+                rx="2"
+              />
+              <rect x="5" y="-35" width="20" height="5" fill="#f1c40f" />
+              <text
+                x="10"
+                y="-10"
+                fill="white"
+                font-size="12"
+                font-weight="bold"
+              >
+                V
+              </text>
+            </g>
 
-            <div class="drop-zone" id="slot-resistor" data-type="resistor" style="top: 50px; left: 200px;"></div>
-            <div class="drop-zone rotated-led" id="slot-led" data-type="led" style="top: 150px; left: 300px;"></div>
+            <text x="160" y="30" class="label-text">
+              R:
+              <tspan id="r-display">0</tspan>
+              Ω
+            </text>
+            <text x="360" y="155" class="label-text">LED</text>
+            <text x="140" y="285" class="label-text">
+            Arus:
+              <tspan id="i-display">0.00</tspan>
+              mA
+            </text>
+          </svg>
+
+          <div
+            class="drop-zone"
+            id="slot-resistor"
+            data-type="resistor"
+            style="top: 50px; left: 200px"
+          ></div>
+          <div
+            class="drop-zone rotated-led"
+            id="slot-led"
+            data-type="led"
+            style="top: 150px; left: 325px"
+          ></div>
         </div>
 
         <div class="input-card">
-            <div class="inputs">
-                <input type="number" id="v-input" placeholder="Volt (V)" value="12">
-                <input type="number" id="r-input" placeholder="Ohm (R)" value="100">
+          <h4>Variabel</h4>
+          <div class="inputs-wrapper">
+            <div class="input-group">
+              <label for="v-input">Tegangan Baterai (V)</label>
+              <input type="number" id="v-input" value="12" />
             </div>
-            <button id="btn-generate">Generate</button>
+            <div class="input-group">
+              <label for="r-input">Resistansi (Ω)</label>
+              <input type="number" id="r-input" value="100" />
+            </div>
+          </div>
+          <button id="btn-generate">Generate</button>
         </div>
-    </div>
+      </div>
 
-    <div class="side-panel">
-        <div class="card">
-            <h4>Components:</h4>
-            <div class="shelf">
+      <div class="side-panel">
+    <div class="card">
+        <h4>Components:</h4>
+        <div class="shelf">
+            <div class="component-item">
                 <div class="draggable" draggable="true" id="drag-resistor" data-type="resistor">
                     <svg width="80" height="30" viewBox="0 0 80 30">
                         <line x1="0" y1="15" x2="80" y2="15" stroke="#333" stroke-width="3"/>
-                        <rect x="20" y="5" width="40" height="20" rx="10" fill="#d2b48c" stroke="#333"/>
-                        <rect x="30" y="5" width="4" height="20" fill="#8b4513"/>
-                        <rect x="40" y="5" width="4" height="20" fill="#000"/>
+                        <rect x="15" y="5" width="50" height="20" rx="10" fill="#00FFFF" stroke="#333"/>
+                        <rect x="25" y="5" width="4" height="20" fill="#000" />
+                        <rect x="33" y="5" width="4" height="20" fill="#000" />
+                        <rect x="41" y="5" width="4" height="20" fill="#000" />
+                        <rect x="50" y="5" width="4" height="20" fill="#000" />
                     </svg>
                 </div>
+                <span class="comp-name">Resistor</span>
+            </div>
+
+            <div class="component-item">
                 <div class="draggable" draggable="true" id="drag-led" data-type="led">
-                    <svg width="30" height="50" viewBox="0 0 30 50">
-                        <line x1="15" y1="0" x2="15" y2="50" stroke="#333" stroke-width="3"/>
-                        <path d="M5,15 Q5,0 15,0 Q25,0 25,15 L25,30 L5,30 Z" fill="#eee" stroke="#333" class="led-bulb"/>
+                    <svg width="40" height="60" viewBox="0 0 40 60">
+                        <line x1="6" y1="35" x2="6" y2="56" stroke="#333" stroke-width="3"/>
+                        <line x1="34" y1="35" x2="34" y2="56" stroke="#333" stroke-width="3"/>
+                        <path d="M5,35 L35,35 L35,20 Q35,0 20,0 Q5,0 5,20 Z" fill="#eee" stroke="#333" class="led-bulb"/>
+                        <line x1="5" y1="30" x2="35" y2="30" stroke="#333" stroke-width="1" opacity="0.3"/>
                     </svg>
                 </div>
+                <span class="comp-name">LED</span>
             </div>
         </div>
     </div>
 </div>
+    </div>
 
-
-
-<script src="script.js"></script>
-</body>
+    <script src="script.js"></script>
+  </body>
 </html>
