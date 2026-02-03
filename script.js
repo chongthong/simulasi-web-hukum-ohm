@@ -1,87 +1,61 @@
 const draggables = document.querySelectorAll('.draggable');
 const dropZones = document.querySelectorAll('.drop-zone');
-const btnRun = document.getElementById('btn-run');
-const msgBox = document.getElementById('msg');
 
-let sirkuitLengkap = { resistor: false, led: false };
+let state = { resistor: false, led: false };
 
-// --- LOGIKA DRAG & DROP ---
+// Drag and Drop
 draggables.forEach(item => {
     item.addEventListener('dragstart', (e) => {
         e.dataTransfer.setData('type', item.dataset.type);
-        e.dataTransfer.setData('sourceId', item.id);
+        e.dataTransfer.setData('id', item.id);
     });
 });
 
 dropZones.forEach(zone => {
-    zone.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        zone.classList.add('hover');
-    });
-
-    zone.addEventListener('dragleave', () => zone.classList.remove('hover'));
-
+    zone.addEventListener('dragover', (e) => e.preventDefault());
     zone.addEventListener('drop', (e) => {
-        e.preventDefault();
-        zone.classList.remove('hover');
-        
         const type = e.dataTransfer.getData('type');
-        const sourceId = e.dataTransfer.getData('sourceId');
-
         if (type === zone.dataset.type) {
-            const originalIcon = document.getElementById(sourceId).querySelector('svg');
-            const clone = originalIcon.cloneNode(true);
-            
+            const clone = document.getElementById(e.dataTransfer.getData('id')).querySelector('svg').cloneNode(true);
             zone.innerHTML = "";
             zone.appendChild(clone);
             zone.classList.add('filled');
-            sirkuitLengkap[type] = true;
-            
-            updateMessage();
-        } else {
-            alert("Gunakan slot yang benar!");
+            state[type] = true;
         }
     });
 });
 
-function updateMessage() {
-    if (sirkuitLengkap.resistor && sirkuitLengkap.led) {
-        msgBox.innerText = "Sirkuit Siap! Klik Jalankan Arus.";
-        msgBox.style.background = "#2ecc71";
-    }
-}
-
-// --- LOGIKA HUKUM OHM ---
-btnRun.addEventListener('click', () => {
-    if (!sirkuitLengkap.resistor || !sirkuitLengkap.led) {
-        alert("Pasang semua komponen dulu!");
+// Calculate Current
+document.getElementById('btn-generate').addEventListener('click', () => {
+    if (!state.resistor || !state.led) {
+        alert("Please complete the circuit first!");
         return;
     }
 
     const V = parseFloat(document.getElementById('v-input').value);
     const R = parseFloat(document.getElementById('r-input').value);
-    const I_mA = (V / R) * 1000;
-
-    // Cari elemen lampu LED di dalam slot
-    const ledBulb = document.querySelector('#slot-led .led-bulb');
     
-    let warna = "#95a5a6"; // Mati
-    let keterangan = "";
+    if (isNaN(V) || isNaN(R) || R <= 0) return;
 
-    if (I_mA < 50) {
-        warna = "#7f8c8d"; keterangan = "Arus Lemah: LED Mati";
-    } else if (I_mA < 150) {
-        warna = "#f1c40f"; keterangan = "Arus Ok: LED Redup";
-    } else if (I_mA <= 220) {
-        warna = "#f39c12"; keterangan = "Arus Ideal: LED Terang";
-    } else {
-        warna = "#e74c3c"; keterangan = "BURNOUT! LED Putus";
-    }
+    const I_mA = (V / R) * 1000;
+    
+    // Update Labels
+    document.getElementById('r-val-label').innerText = R;
+    document.getElementById('i-val-label').innerText = I_mA.toFixed(2);
 
-    // Efek Cahaya LED
-    ledBulb.style.fill = warna;
-    ledBulb.style.filter = I_mA > 50 ? `drop-shadow(0 0 10px ${warna})` : "none";
-    ledBulb.style.transition = "0.5s";
+    // Update LED Visual
+    const ledBulb = document.querySelector('#slot-led .led-bulb');
+    let color = "#eee";
+    if (I_mA > 10 && I_mA < 150) color = "#ffeb3b";
+    else if (I_mA >= 150 && I_mA <= 220) color = "#ff9800";
+    else if (I_mA > 220) color = "#f44336";
 
-    msgBox.innerHTML = `I = ${I_mA.toFixed(1)} mA <br> ${keterangan}`;
+    ledBulb.style.fill = color;
+    
+    // Show Popup
+    document.getElementById('modal').style.display = 'block';
 });
+
+function closeModal() {
+    document.getElementById('modal').style.display = 'none';
+}

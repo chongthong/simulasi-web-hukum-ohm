@@ -1,34 +1,39 @@
-body { font-family: 'Segoe UI', sans-serif; background: #2c3e50; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-.app-container { background: #ecf0f1; display: flex; width: 1000px; height: 500px; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); overflow: hidden; }
+body { font-family: 'Arial', sans-serif; background: #9ea7ad; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }
+.main-container { display: flex; width: 95%; max-width: 1100px; height: 600px; background: white; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
 
-/* Sidebar & Shelf */
-.sidebar, .shelf { width: 200px; padding: 20px; background: #f8f9fa; border: 1px solid #ddd; }
-.status-box { padding: 10px; background: #3498db; color: white; border-radius: 5px; font-size: 14px; text-align: center; }
+.side-panel { width: 250px; padding: 20px; background: #fdfdfd; }
+.center-panel { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; border-left: 1px solid #eee; border-right: 1px solid #eee; position: relative; }
 
-/* Workspace */
-.main-canvas { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
-.circuit-wrapper { position: relative; }
+.card { border: 1px solid #ddd; padding: 15px; border-radius: 4px; height: 90%; }
+.legend-item { display: flex; align-items: center; margin: 10px 0; font-size: 14px; }
+.dot { width: 12px; height: 12px; margin-right: 10px; border: 1px solid #999; }
+.low { background: #ccc; } .med { background: #ffeb3b; } .high { background: #ff9800; } .over { background: #f44336; }
 
-/* Drop Zone Styling */
+/* Circuit Board Area */
+.circuit-container { position: relative; width: 400px; height: 300px; }
+.circuit-svg { width: 100%; height: 100%; }
+.label-text { font-size: 14px; font-weight: bold; fill: #555; }
+
+/* Drop Zones - No Border when empty to look clean */
 .drop-zone {
-    position: absolute; width: 80px; height: 40px; border: 2px dashed #95a5a6;
-    display: flex; align-items: center; justify-content: center; font-size: 10px; color: #7f8c8d;
-    transition: 0.3s; transform: translate(-50%, -50%);
+    position: absolute; display: flex; align-items: center; justify-content: center;
+    transform: translate(-50%, -50%); transition: 0.2s;
 }
-#slot-led { width: 40px; height: 60px; }
-.drop-zone.hover { background: rgba(46, 204, 113, 0.2); border-color: #2ecc71; }
-.drop-zone.filled { border: none; background: transparent; }
+#slot-resistor { width: 80px; height: 30px; }
+#slot-led { width: 30px; height: 60px; }
+.drop-zone:not(.filled) { border: 2px dashed #ccc; }
 
-/* Draggable Icons */
-.draggable { 
-    background: white; border: 1px solid #ddd; padding: 15px; margin-bottom: 15px;
-    border-radius: 10px; cursor: grab; text-align: center; transition: 0.2s;
-}
-.draggable:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+/* Components Shelf */
+.shelf { display: flex; flex-direction: column; align-items: center; gap: 30px; margin-top: 20px; }
+.draggable { cursor: grab; }
 
-/* Controls */
-.controls-panel { margin-top: 20px; display: flex; gap: 15px; align-items: flex-end; }
-.input-group { display: flex; flex-direction: column; font-size: 12px; font-weight: bold; }
-input { width: 70px; padding: 8px; border: 1px solid #ccc; border-radius: 5px; margin-top: 5px; }
-button { background: #27ae60; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; }
-button:hover { background: #2ecc71; }
+/* Inputs & Generate */
+.input-card { margin-top: 20px; text-align: center; }
+.inputs { margin-bottom: 15px; }
+input { width: 80px; padding: 8px; margin: 0 5px; border: 1px solid #ccc; border-radius: 4px; }
+button#btn-generate { background: #00bcd4; color: white; border: none; padding: 12px 50px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 16px; }
+
+/* Modal */
+.modal { display: none; position: fixed; z-index: 10; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
+.modal-content { background: #444; color: white; margin: 15% auto; padding: 20px; width: 300px; text-align: center; border-radius: 8px; }
+.modal-content button { background: #666; color: white; border: none; padding: 10px 30px; cursor: pointer; margin-top: 15px; }
