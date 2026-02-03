@@ -161,6 +161,7 @@ button#btn-generate:hover {
 .draggable:active {
     cursor: grabbing;
     transform: scale(0.95);
+    
 }
 .side-panel .card {
     border: 1px solid #ddd;
@@ -203,3 +204,4 @@ button#btn-generate:hover {
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
+
