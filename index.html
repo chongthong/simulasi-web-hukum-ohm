@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulasi Ohm's Law - Drag & Drop</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <div class="sidebar">
+        <h3>Instruction:</h3>
+        <p>Lengkapi sirkuit dengan mendrag komponen, lalu tentukan nilai V dan R untuk menyalakan LED (200 mA).</p>
+        <hr>
+        <div class="legend"><span class="box low"></span> Low Current</div>
+        <div class="legend"><span class="box med"></span> Medium Current</div>
+        <div class="legend"><span class="box high"></span> High Current</div>
+        <div class="legend"><span class="box over"></span> Over Current/Burnout</div>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1>Ohm's Law</h1>
+        </div>
+
+        <div class="simulation-grid">
+            <div class="circuit-area">
+                <div class="circuit-diagram">
+                    <svg width="250" height="200" viewBox="0 0 250 200">
+                        <path d="M 50 50 L 200 50 L 200 150 L 50 150 Z" fill="none" stroke="#333" stroke-width="3"/>
+                    </svg>
+                    
+                    <div class="drop-zone" id="slot-resistor" data-type="resistor" style="top: 35px; left: 100px;">R</div>
+                    <div class="drop-zone" id="slot-led" data-type="led" style="top: 85px; left: 185px;">LED</div>
+                    <div class="drop-zone" id="slot-battery" data-type="battery" style="top: 85px; left: 35px;">V</div>
+                </div>
+
+                <div class="inputs" id="input-area" style="display: none;">
+                    <input type="number" id="voltage" placeholder="Volt (V)">
+                    <input type="number" id="resistance" placeholder="Ohm (R)">
+                </div>
+                <button id="btn-generate">Generate</button>
+                <div id="status-display" class="status">Lengkapi komponen terlebih dahulu!</div>
+            </div>
+
+            <div class="components-panel">
+                <h3>Components:</h3>
+                <div class="items-box">
+                    <div class="draggable" draggable="true" id="led" data-type="led">💡<br>LED</div>
+                    <div class="draggable" draggable="true" id="resistor" data-type="resistor">🔌<br>Resistor</div>
+                    <div class="draggable" draggable="true" id="battery" data-type="battery">🔋<br>Battery</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

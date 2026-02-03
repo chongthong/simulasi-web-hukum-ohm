@@ -1,0 +1,37 @@
+body { font-family: 'Arial', sans-serif; background: #e0e0e0; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }
+.container { background: white; display: flex; width: 900px; border-radius: 10px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+
+/* Sidebar */
+.sidebar { width: 250px; padding: 20px; border-right: 2px solid #ddd; background: #f9f9f9; }
+.legend { margin-bottom: 10px; display: flex; align-items: center; font-size: 14px; }
+.box { width: 15px; height: 15px; margin-right: 10px; border-radius: 2px; }
+.low { background: #ccc; } .med { background: #ffeb3b; } .high { background: #ff9800; } .over { background: #f44336; }
+
+/* Main Area */
+.main-content { flex: 1; padding: 20px; text-align: center; }
+.simulation-grid { display: flex; justify-content: space-around; margin-top: 20px; }
+
+/* Circuit & Drop Zones */
+.circuit-area { position: relative; }
+.circuit-diagram { position: relative; background: #fff; padding: 20px; }
+.drop-zone {
+    position: absolute; width: 40px; height: 40px; border: 2px dashed #bbb;
+    background: #fff; display: flex; align-items: center; justify-content: center;
+    font-size: 10px; color: #bbb; transition: 0.3s;
+}
+.drop-zone.hover { background: #e1f5fe; border-color: #03a9f4; }
+.drop-zone.filled { border: none; font-size: 24px; color: #000; }
+
+/* Draggable Items */
+.items-box { border: 2px solid #00bcd4; padding: 15px; border-radius: 8px; display: flex; flex-direction: column; gap: 15px; background: #f0faff; }
+.draggable {
+    padding: 10px; background: white; border: 1px solid #ddd; cursor: grab;
+    text-align: center; border-radius: 5px; font-weight: bold;
+}
+.draggable:active { cursor: grabbing; }
+
+/* Controls */
+.inputs { margin-top: 15px; display: flex; gap: 10px; justify-content: center; }
+input { width: 60px; padding: 5px; border: 1px solid #ccc; }
+button { margin-top: 15px; padding: 10px 30px; background: #00bcd4; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+.status { margin-top: 15px; font-size: 14px; color: #666; }
