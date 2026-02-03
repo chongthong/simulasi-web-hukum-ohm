@@ -54,14 +54,14 @@ btnGenerate.addEventListener('click', () => {
 
     // Update Warna LED tetap jalan
     const ledBulb = document.querySelector('#slot-led .led-bulb');
-    let color = "#eee";
+    let color = "#FFFED6";
 
     if (I_mA > 50 && I_mA < 150) {
         color = "#ffeb3b"; // Kuning Redup
     } else if (I_mA >= 150 && I_mA <= 200) {
         color = "#ff9800"; // Oranye Terang
     } else if (I_mA > 200) {
-        color = "#f44336"; // Merah Terbakar
+        color = "#000000"; // Putih Sangat Terang                               
     }
 
     if (ledBulb) {
