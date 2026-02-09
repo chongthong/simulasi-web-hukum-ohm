@@ -26,6 +26,11 @@
               <span class="dot over"></span> Burnout (> 200mA)
             </div>
           </div>
+
+          <div class="result-display">
+            <p>Arus :</p>
+            <h2><span id="i-display">0.00</span> mA</h2>
+          </div>
         </div>
       </div>
 
@@ -60,11 +65,7 @@
               </text>
             </g>
 
-            <text x="140" y="285" class="label-text">
-              Arus:
-              <tspan id="i-display">0.00</tspan>
-              mA
-            </text>
+            
           </svg>
 
           <div
@@ -101,217 +102,221 @@
         <div class="card">
           <h4>Components:</h4>
           <div class="shelf">
-            <div
-              class="draggable"
-              draggable="true"
-              id="drag-resistor"
-              data-type="resistor"
-            >
-              <svg width="80" height="30" viewBox="0 0 80 30">
-                <line
-                  x1="0"
-                  y1="15"
-                  x2="80"
-                  y2="15"
-                  stroke="#333"
-                  stroke-width="3"
-                />
-                <rect
-                  x="15"
-                  y="5"
-                  width="50"
-                  height="20"
-                  rx="10"
-                  fill="#00FFFF"
-                  stroke="#333"
-                />
-                <rect x="25" y="5" width="4" height="20" fill="#000" />
-                <rect x="33" y="5" width="4" height="20" fill="#000" />
-                <rect x="41" y="5" width="4" height="20" fill="#000" />
-                <rect x="50" y="5" width="4" height="20" fill="#000" />
-              </svg>
+            <div class="component-item">
+              <span class="comp-name">Resistor</span>
+              <div
+                class="draggable"
+                draggable="true"
+                id="drag-resistor"
+                data-type="resistor"
+              >
+                <svg width="80" height="30" viewBox="0 0 80 30">
+                  <line
+                    x1="0"
+                    y1="15"
+                    x2="80"
+                    y2="15"
+                    stroke="#333"
+                    stroke-width="3"
+                  />
+                  <rect
+                    x="15"
+                    y="5"
+                    width="50"
+                    height="20"
+                    rx="10"
+                    fill="#00FFFF"
+                    stroke="#333"
+                  />
+                  <rect x="25" y="5" width="4" height="20" fill="#000" />
+                  <rect x="33" y="5" width="4" height="20" fill="#000" />
+                  <rect x="41" y="5" width="4" height="20" fill="#000" />
+                  <rect x="50" y="5" width="4" height="20" fill="#000" />
+                </svg>
+              </div>
             </div>
 
-            <div
-              class="draggable"
-              draggable="true"
-              id="drag-led"
-              data-type="led"
-            >
-              <svg width="40" height="60" viewBox="0 0 40 60">
-                <line
-                  x1="6"
-                  y1="35"
-                  x2="6"
-                  y2="56"
-                  stroke="#333"
-                  stroke-width="3"
-                />
-                <line
-                  x1="34"
-                  y1="35"
-                  x2="34"
-                  y2="56"
-                  stroke="#333"
-                  stroke-width="3"
-                />
-                <path
-                  d="M5,35 L35,35 L35,20 Q35,0 20,0 Q5,0 5,20 Z"
-                  fill="#FFFFFF"
-                  stroke="#333"
-                  class="led-bulb"
-                />
-                <line
-                  x1="5"
-                  y1="30"
-                  x2="35"
-                  y2="30"
-                  stroke="#333"
-                  stroke-width="1"
-                  opacity="0.3"
-                />
-              </svg>
+            <div class="component-item">
+              <span class="comp-name">Battery</span>
+              <div
+                class="draggable"
+                draggable="true"
+                id="drag-battery"
+                data-type="battery"
+              >
+                <svg width="40" height="60" viewBox="0 0 40 60">
+                  <rect
+                    x="5"
+                    y="10"
+                    width="30"
+                    height="45"
+                    rx="2"
+                    fill="#2c3e50"
+                    stroke="#333"
+                    stroke-width="2"
+                  />
+                  <rect
+                    x="12"
+                    y="5"
+                    width="16"
+                    height="5"
+                    fill="#f1c40f"
+                    stroke="#333"
+                    stroke-width="1"
+                  />
+                  <text
+                    x="11"
+                    y="40"
+                    fill="white"
+                    font-size="10"
+                    font-weight="bold"
+                  >
+                    BAT
+                  </text>
+                </svg>
+              </div>
             </div>
 
-            <div
-              class="draggable"
-              draggable="true"
-              id="drag-battery"
-              data-type="battery"
-            >
-              <svg width="40" height="60" viewBox="0 0 40 60">
-                <rect
-                  x="5"
-                  y="10"
-                  width="30"
-                  height="45"
-                  rx="2"
-                  fill="#2c3e50"
-                  stroke="#333"
-                  stroke-width="2"
-                />
-                <rect
-                  x="12"
-                  y="5"
-                  width="16"
-                  height="5"
-                  fill="#f1c40f"
-                  stroke="#333"
-                  stroke-width="1"
-                />
-                <text
-                  x="11"
-                  y="40"
-                  fill="white"
-                  font-size="10"
-                  font-weight="bold"
-                >
-                  BAT
-                </text>
-              </svg>
+            <div class="component-item">
+              <span class="comp-name">LED Light</span>
+              <div
+                class="draggable"
+                draggable="true"
+                id="drag-led"
+                data-type="led"
+              >
+                <svg width="40" height="60" viewBox="0 0 40 60">
+                  <line
+                    x1="6"
+                    y1="35"
+                    x2="6"
+                    y2="56"
+                    stroke="#333"
+                    stroke-width="3"
+                  />
+                  <line
+                    x1="34"
+                    y1="35"
+                    x2="34"
+                    y2="56"
+                    stroke="#333"
+                    stroke-width="3"
+                  />
+                  <path
+                    d="M5,35 L35,35 L35,20 Q35,0 20,0 Q5,0 5,20 Z"
+                    fill="#FFFFFF"
+                    stroke="#333"
+                    class="led-bulb"
+                  />
+                </svg>
+              </div>
             </div>
-
-            <div
-              class="draggable"
-              draggable="true"
-              id="drag-wire"
-              data-type="wire"
-            >
-              <svg width="80" height="30" viewBox="0 0 80 30">
-                <line
-                  x1="0"
-                  y1="15"
-                  x2="80"
-                  y2="15"
-                  stroke="#333"
-                  stroke-width="4"
-                  stroke-linecap="round"
-                />
-              </svg>
+            <div class="component-item">
+              <span class="comp-name">Wire</span>
+              <div
+                class="draggable"
+                draggable="true"
+                id="drag-wire"
+                data-type="wire"
+              >
+                <svg width="80" height="30" viewBox="0 0 80 30">
+                  <line
+                    x1="0"
+                    y1="15"
+                    x2="80"
+                    y2="15"
+                    stroke="#333"
+                    stroke-width="4"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </div>
             </div>
+            <div class="component-item">
+              <span class="comp-name">Capasitor</span>
+              <div
+                class="draggable"
+                draggable="true"
+                id="drag-capacitor"
+                data-type="capacitor"
+              >
+                <svg width="40" height="60" viewBox="0 0 40 60">
+                  <line
+                    x1="14"
+                    y1="45"
+                    x2="14"
+                    y2="60"
+                    stroke="#333"
+                    stroke-width="2.5"
+                  />
+                  <line
+                    x1="26"
+                    y1="45"
+                    x2="26"
+                    y2="60"
+                    stroke="#333"
+                    stroke-width="2.5"
+                  />
 
-            <div
-              class="draggable"
-              draggable="true"
-              id="drag-capacitor"
-              data-type="capacitor"
-            >
-              <svg width="40" height="60" viewBox="0 0 40 60">
-                <line
-                  x1="14"
-                  y1="45"
-                  x2="14"
-                  y2="60"
-                  stroke="#333"
-                  stroke-width="2.5"
-                />
-                <line
-                  x1="26"
-                  y1="45"
-                  x2="26"
-                  y2="60"
-                  stroke="#333"
-                  stroke-width="2.5"
-                />
+                  <rect
+                    x="8"
+                    y="5"
+                    width="24"
+                    height="40"
+                    rx="3"
+                    fill="#34495e"
+                    stroke="#333"
+                    stroke-width="1.5"
+                  />
 
-                <rect
-                  x="8"
-                  y="5"
-                  width="24"
-                  height="40"
-                  rx="3"
-                  fill="#34495e"
-                  stroke="#333"
-                  stroke-width="1.5"
-                />
+                  <rect
+                    x="22"
+                    y="5"
+                    width="10"
+                    height="40"
+                    rx="0"
+                    fill="#bdc3c7"
+                    opacity="0.8"
+                  />
+                  <text
+                    x="24"
+                    y="25"
+                    fill="#34495e"
+                    font-size="8"
+                    font-weight="bold"
+                  >
+                    -
+                  </text>
+                  <text
+                    x="24"
+                    y="15"
+                    fill="#34495e"
+                    font-size="8"
+                    font-weight="bold"
+                  >
+                    -
+                  </text>
+                  <text
+                    x="24"
+                    y="35"
+                    fill="#34495e"
+                    font-size="8"
+                    font-weight="bold"
+                  >
+                    -
+                  </text>
 
-                <rect
-                  x="22"
-                  y="5"
-                  width="10"
-                  height="40"
-                  rx="0"
-                  fill="#bdc3c7"
-                  opacity="0.8"
-                />
-                <text
-                  x="24"
-                  y="25"
-                  fill="#34495e"
-                  font-size="8"
-                  font-weight="bold"
-                >
-                  -
-                </text>
-                <text
-                  x="24"
-                  y="15"
-                  fill="#34495e"
-                  font-size="8"
-                  font-weight="bold"
-                >
-                  -
-                </text>
-                <text
-                  x="24"
-                  y="35"
-                  fill="#34495e"
-                  font-size="8"
-                  font-weight="bold"
-                >
-                  -
-                </text>
-
-                <ellipse
-                  cx="20"
-                  cy="7"
-                  rx="12"
-                  ry="3"
-                  fill="#2c3e50"
-                  stroke="#333"
-                  stroke-width="1"
-                />
-              </svg>
+                  <ellipse
+                    cx="20"
+                    cy="7"
+                    rx="12"
+                    ry="3"
+                    fill="#2c3e50"
+                    stroke="#333"
+                    stroke-width="1"
+                  />
+                </svg>
+              </div>
             </div>
           </div>
         </div>
