@@ -18,8 +18,8 @@ body {
 
 /* Main Container */
 .main-container {
-  width: 1400px;
-  max-width: 95%;
+  width: 1100px;
+  height: 1000px;
   background: #fff;
   border-radius: 20px;
   overflow: hidden;
@@ -125,7 +125,7 @@ body {
   padding: 18px 20px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .card-header h3 {
@@ -154,13 +154,13 @@ body {
   margin-bottom: 25px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 5px;
   border-left: 4px solid #00BCD4;
 }
 
 .target-text i {
   color: #00BCD4;
-  font-size: 1.2rem;
+  font-size: rem;
 }
 
 .highlight {
@@ -187,7 +187,7 @@ body {
 .legend-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 .legend-item {
@@ -212,10 +212,10 @@ body {
   flex-shrink: 0;
 }
 
-.low { background: #FFFED6; border: 2px solid #FFD700; }
-.med { background: #ffeb3b; border: 2px solid #FFA500; }
-.high { background: #ff9800; border: 2px solid #FF5722; }
-.over { background: #000000; border: 2px solid #d32f2f; }
+.low { background: #fffc5f;}
+.med { background: #fc9653;  }
+.high { background: #ff3c01;}
+.over { background: #000000; }
 
 .legend-text {
   display: flex;
@@ -436,8 +436,8 @@ body {
 .inputs-wrapper {
   display: flex;
   justify-content: space-between;
-  gap: 30px;
-  margin-bottom: 25px;
+  gap: 10px;
+  margin-bottom: 10px;
 }
 
 .input-group {
@@ -586,7 +586,7 @@ body {
 .display-label {
   font-size: 0.9rem;
   color: #666;
-  margin-bottom: 8px;
+  margin-bottom: 1px;
 }
 
 .display-value {
@@ -789,7 +789,7 @@ body {
   
   .inputs-wrapper {
     flex-direction: column;
-    gap: 20px;
+    gap: 10px;
   }
   
   .footer-content {
@@ -813,7 +813,7 @@ body {
   
   .real-time-display {
     flex-direction: column;
-    gap: 20px;
+    gap: 10px;
   }
   
   .main-container {

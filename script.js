@@ -21,13 +21,6 @@ const rSlider = document.getElementById('r-slider');
 
 // Elemen display
 const iDisplay = document.getElementById('i-display');
-const pDisplay = document.getElementById('p-display');
-
-// Variabel untuk menyimpan komponen yang ditempatkan
-let placedComponents = {
-  resistor: null,
-  led: null
-};
 
 // Update status sirkuit
 function updateCircuitStatus() {
@@ -52,57 +45,36 @@ function updateCircuitStatus() {
 
 // Reset LED ke kondisi awal
 function resetLED() {
-  const ledBulb = document.querySelector('#slot-led .led-bulb');
+  const ledSlot = document.querySelector('#slot-led');
+  if (!ledSlot) return;
+  
+  const ledBulb = ledSlot.querySelector('.led-bulb');
   if (ledBulb) {
-    ledBulb.style.fill = '#FFFFFF';
-    ledBulb.style.filter = 'none';
+    ledBulb.setAttribute('fill', '#FFFFFF');
+    ledBulb.style.opacity = '1';
     ledBulb.style.animation = 'none';
     ledBulb.style.transition = 'none';
+    
+    // Hapus filter SVG jika ada
+    const svgElement = ledSlot.querySelector('svg');
+    if (svgElement) {
+      const defs = svgElement.querySelector('defs');
+      if (defs) {
+        const filter = defs.querySelector('filter');
+        if (filter) filter.remove();
+      }
+      ledBulb.removeAttribute('filter');
+    }
   }
 }
 
 // Reset tampilan hasil
 function resetDisplay() {
   iDisplay.textContent = '0.00';
-  pDisplay.textContent = '0.00';
   resetLED();
 }
 
-// Fungsi untuk menghitung dan menampilkan hasil (HANYA saat tombol ditekan)
-// Fungsi untuk menghitung dan menampilkan hasil (HANYA saat tombol ditekan)
-function calculateAndDisplay() {
-  console.log('Tombol simulasi ditekan!');
-  
-  // Validasi: cek apakah sirkuit lengkap
-  if (!state.resistor || !state.led) {
-    console.log('Sirkuit tidak lengkap! Resistor:', state.resistor, 'LED:', state.led);
-   return;
-  }
-
-  const V = parseFloat(vInput.value);
-  const R = parseFloat(rInput.value);
-  
-  console.log('Nilai input - V:', V, 'R:', R);
-  
-  
-
-  // Hitung arus (I = V / R) dalam mA
-  const I_mA = (V / R) * 1000;
-  
-  console.log('Arus yang dihitung:', I_mA, 'mA');
-  
-  // Update tampilan
-  iDisplay.textContent = I_mA.toFixed(2);
-  
-  // Update warna LED berdasarkan arus
-  updateLEDColor(I_mA);
-  
-  // Tampilkan pesan berdasarkan hasil
-  showResultMessage(I_mA);
-}
-
 // Update warna LED berdasarkan arus
-// Update warna LED berdasarkan arus (VERSI DIPERBAIKI)
 function updateLEDColor(I_mA) {
   const ledSlot = document.querySelector('#slot-led');
   if (!ledSlot) return;
@@ -110,158 +82,109 @@ function updateLEDColor(I_mA) {
   const ledBulb = ledSlot.querySelector('.led-bulb');
   if (!ledBulb) return;
   
-  let color = "#FFFED6";
-  let glowColor = "#FFFED6";
-  let glowIntensity = 0;
-  let brightness = 0.3;
+  let color = "#ffffff";
   
   if (I_mA > 0 && I_mA < 50) {
-    color = "#faf9ca"; // Kuning sangat redup
+    color = "#fffc5f"; // Kuning sangat redup
+       
   } else if (I_mA >= 50 && I_mA < 150) {
-    color = "#ffeb3b"; // Kuning
-  } else if (I_mA >= 150 && I_mA <= 200) {
-    color = "#ff9800"; // Oranye terang 
-  } else if (I_mA > 200) {
-    color = "#000000"; // Oranye merah (terlalu terang) 
+    color = "#fc9653"; // Kuning
+      } else if (I_mA >= 150 && I_mA <= 200) {
+    color = "#ff3c01"; // Oranye terang
+      } else if (I_mA > 200) {
+    color = "#000000"; // Oranye merah (terlalu terang)
+   
+    
   } 
-  
-  // Debug: Log untuk memastikan fungsi dipanggil
-  console.log('updateLEDColor dipanggil dengan I_mA:', I_mA);
-  console.log('Warna yang akan diterapkan:', color);
-  console.log('Elemen LED ditemukan:', !!ledBulb);
   
   // Terapkan perubahan warna fill
   ledBulb.setAttribute('fill', color);
   
+  // Buat filter untuk glow effect
+  const filterId = `glow-${Date.now()}`;
   
-}
-
-// Fungsi reset LED yang diperbaiki
-function resetLED() {
-  const ledSlot = document.querySelector('#slot-led');
-  if (!ledSlot) return;
+  // Hapus filter lama jika ada
+  const oldFilter = document.getElementById('led-glow-filter');
+  if (oldFilter) oldFilter.remove();
   
-  const ledBulb = ledSlot.querySelector('.led-bulb');
-  if (ledBulb) {
-    ledBulb.setAttribute('fill', '#FFFFFF');
-    ledBulb.style.opacity = '1';
-    ledBulb.style.filter = 'none';
-    ledBulb.style.animation = 'none';
-    ledBulb.style.transition = 'none';
-    
-    // Hapus filter SVG jika ada
-    const svgElement = ledSlot.querySelector('svg');
-    if (svgElement) {
-      const defs = svgElement.querySelector('defs');
-      if (defs) {
-        const filter = defs.querySelector('filter');
-        if (filter) filter.remove();
-      }
-      ledBulb.removeAttribute('filter');
+  // Buat filter SVG baru untuk glow effect
+  const svgNS = "http://www.w3.org/2000/svg";
+  const filter = document.createElementNS(svgNS, "filter");
+  filter.setAttribute("id", filterId);
+  filter.setAttribute("x", "-50%");
+  filter.setAttribute("y", "-50%");
+  filter.setAttribute("width", "200%");
+  filter.setAttribute("height", "200%");
+  
+  const feGaussianBlur = document.createElementNS(svgNS, "feGaussianBlur");
+  feGaussianBlur.setAttribute("stdDeviation", glowIntensity.toString());
+  feGaussianBlur.setAttribute("result", "coloredBlur");
+  
+  const feMerge = document.createElementNS(svgNS, "feMerge");
+  const feMergeNode1 = document.createElementNS(svgNS, "feMergeNode");
+  feMergeNode1.setAttribute("in", "coloredBlur");
+  const feMergeNode2 = document.createElementNS(svgNS, "feMergeNode");
+  feMergeNode2.setAttribute("in", "SourceGraphic");
+  
+  feMerge.appendChild(feMergeNode1);
+  feMerge.appendChild(feMergeNode2);
+  
+  filter.appendChild(feGaussianBlur);
+  filter.appendChild(feMerge);
+  
+  // Tambahkan filter ke SVG
+  const svgElement = ledSlot.querySelector('svg');
+  if (svgElement) {
+    // Cek apakah sudah ada defs, jika tidak buat
+    let defs = svgElement.querySelector('defs');
+    if (!defs) {
+      defs = document.createElementNS(svgNS, "defs");
+      svgElement.insertBefore(defs, svgElement.firstChild);
     }
-  }
-}
-
-// Fungsi reset LED yang diperbaiki
-function resetLED() {
-  const ledSlot = document.querySelector('#slot-led');
-  if (!ledSlot) return;
-  
-  const ledBulb = ledSlot.querySelector('.led-bulb');
-  if (ledBulb) {
-    ledBulb.setAttribute('fill', '#FFFFFF');
-    ledBulb.style.opacity = '1';
-    ledBulb.style.filter = 'none';
-    ledBulb.style.animation = 'none';
-    ledBulb.style.transition = 'none';
+    defs.appendChild(filter);
     
-    // Hapus filter SVG jika ada
-    const svgElement = ledSlot.querySelector('svg');
-    if (svgElement) {
-      const defs = svgElement.querySelector('defs');
-      if (defs) {
-        const filter = defs.querySelector('filter');
-        if (filter) filter.remove();
-      }
-      ledBulb.removeAttribute('filter');
-    }
-  }
-}
-
-
-
-// Toast notification
-function showToast(message, type) {
-  // Hapus toast sebelumnya jika ada
-  const existingToast = document.querySelector('.toast');
-  if (existingToast) {
-    existingToast.remove();
+    // Terapkan filter ke LED bulb
+    ledBulb.setAttribute('filter', `url(#${filterId})`);
   }
   
-  // Buat elemen toast baru
-  const toast = document.createElement('div');
-  toast.className = `toast toast-${type}`;
-  toast.innerHTML = `
-    <div class="toast-content">
-      <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-triangle' : 'fa-info-circle'}"></i>
-      <span>${message}</span>
-    </div>
-    <button class="toast-close"><i class="fas fa-times"></i></button>
-  `;
-  
-  // Tambahkan ke body
-  document.body.appendChild(toast);
-  
-  // Tampilkan toast
-  setTimeout(() => {
-    toast.classList.add('show');
-  }, 10);
-  
-  // Tambahkan event listener untuk tombol close
-  toast.querySelector('.toast-close').addEventListener('click', () => {
-    toast.classList.remove('show');
-    setTimeout(() => toast.remove(), 300);
-  });
-  
-  // Auto-hide setelah 5 detik
-  setTimeout(() => {
-    if (toast.parentNode) {
-      toast.classList.remove('show');
-      setTimeout(() => toast.remove(), 300);
-    }
-  }, 5000);
+  // Terapkan opacity untuk brightness
+  ledBulb.style.opacity = brightness.toString();
+  ledBulb.style.transition = "fill 0.5s ease, opacity 0.5s ease";
 }
 
-// Event listener untuk tombol +/-
-document.querySelectorAll('.value-btn').forEach(btn => {
-  btn.addEventListener('click', function() {
-    const targetId = this.getAttribute('data-target');
-    const input = document.getElementById(targetId);
-    const isPlus = this.classList.contains('plus');
-    const step = parseFloat(input.step) || 1;
-    const min = parseFloat(input.min) || -Infinity;
-    const max = parseFloat(input.max) || Infinity;
-    
-    let currentValue = parseFloat(input.value) || 0;
-    let newValue = isPlus ? currentValue + step : currentValue - step;
-    
-    // Batasi nilai dalam range
-    newValue = Math.max(min, Math.min(max, newValue));
-    
-    // Update nilai input
-    input.value = newValue;
-    
-    // Sync dengan slider jika ada
-    const sliderId = targetId.replace('input', 'slider');
-    const slider = document.getElementById(sliderId);
-    if (slider) {
-      slider.value = newValue;
-    }
-    
-    // Reset tampilan saat nilai diubah (karena simulasi belum dijalankan)
-    resetDisplay();
-  });
-});
+// Fungsi untuk menghitung dan menampilkan hasil (HANYA saat tombol ditekan)
+function calculateAndDisplay() {
+  // Validasi: cek apakah sirkuit lengkap
+  if (!state.resistor || !state.led) {
+    // Tidak ada notifikasi
+    return;
+  }
+
+  const V = parseFloat(vInput.value);
+  const R = parseFloat(rInput.value);
+  
+  // Validasi input
+  if (isNaN(V) || V <= 0) {
+    // Tidak ada notifikasi
+    return;
+  }
+  
+  if (isNaN(R) || R <= 0) {
+    // Tidak ada notifikasi
+    return;
+  }
+
+  // Hitung arus (I = V / R) dalam mA
+  const I_mA = (V / R) * 1000;
+  
+  // Update tampilan
+  iDisplay.textContent = I_mA.toFixed(2);
+  
+  // Update warna LED berdasarkan arus
+  updateLEDColor(I_mA);
+  
+  // Tidak menampilkan pesan hasil (toast dihapus)
+}
 
 // Event listener untuk input number
 [vInput, rInput].forEach(input => {
@@ -346,18 +269,15 @@ dropZones.forEach(zone => {
       // Update state
       state[type] = true;
       
-      // Simpan komponen yang ditempatkan
-      placedComponents[type] = clone;
-      
       // Update status sirkuit
       updateCircuitStatus();
       
       // Reset tampilan karena komponen baru ditambahkan
       resetDisplay();
       
-      // Tampilkan pesan sukses
-      showToast(`Komponen ${type} berhasil dipasang! Klik "Simulasikan Sirkuit" untuk melihat hasil.`, 'success');
+      // Tidak menampilkan toast sukses
     } 
+    // Tidak menampilkan toast error
   });
 });
 
@@ -383,117 +303,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (zone.querySelector('svg')) {
       const type = zone.dataset.type;
       state[type] = true;
-      
-      // Simpan komponen yang sudah ada
-      placedComponents[type] = zone.querySelector('svg');
     }
   });
   
   updateCircuitStatus();
-  
-  // Tambahkan style untuk toast dan efek tombol
-  const toastStyle = document.createElement('style');
-  toastStyle.textContent = `
-    .toast {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      background: white;
-      border-radius: 10px;
-      padding: 15px 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      min-width: 300px;
-      max-width: 400px;
-      transform: translateY(100px);
-      opacity: 0;
-      transition: transform 0.3s, opacity 0.3s;
-      z-index: 1000;
-      border-left: 5px solid #00BCD4;
-    }
-    
-    .toast.show {
-      transform: translateY(0);
-      opacity: 1;
-    }
-    
-    .toast-success {
-      border-left-color: #4CAF50;
-    }
-    
-    .toast-error {
-      border-left-color: #F44336;
-    }
-    
-    .toast-warning {
-      border-left-color: #FFC107;
-    }
-    
-    .toast-info {
-      border-left-color: #00BCD4;
-    }
-    
-    .toast-content {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      flex: 1;
-    }
-    
-    .toast-content i {
-      font-size: 1.5rem;
-    }
-    
-    .toast-success .toast-content i {
-      color: #4CAF50;
-    }
-    
-    .toast-error .toast-content i {
-      color: #F44336;
-    }
-    
-    .toast-warning .toast-content i {
-      color: #FFC107;
-    }
-    
-    .toast-info .toast-content i {
-      color: #00BCD4;
-    }
-    
-    .toast-content span {
-      color: #333;
-      font-size: 0.95rem;
-      line-height: 1.4;
-    }
-    
-    .toast-close {
-      background: none;
-      border: none;
-      color: #777;
-      cursor: pointer;
-      font-size: 1rem;
-      padding: 5px;
-      margin-left: 10px;
-    }
-    
-    .toast-close:hover {
-      color: #333;
-    }
-    
-    /* Animation for blinking LED */
-    @keyframes blink {
-      from { opacity: 0.7; }
-      to { opacity: 1; }
-    }
-    
-    /* Efek tombol saat diklik */
-    .simulate-btn.clicked {
-      transform: scale(0.98);
-      box-shadow: 0 5px 15px rgba(0, 188, 212, 0.4);
-    }
-  `;
-  
-  document.head.appendChild(toastStyle);
 });
