@@ -13,11 +13,9 @@ const circuitStatus = document.getElementById('circuit-status');
 const statusDot = circuitStatus.querySelector('.status-dot');
 const statusText = circuitStatus.querySelector('.status-text');
 
-// Elemen input dan slider
+// Elemen input (SLIDER DIHAPUS)
 const vInput = document.getElementById('v-input');
 const rInput = document.getElementById('r-input');
-const vSlider = document.getElementById('v-slider');
-const rSlider = document.getElementById('r-slider');
 
 // Elemen display
 const iDisplay = document.getElementById('i-display');
@@ -74,7 +72,7 @@ function resetDisplay() {
   resetLED();
 }
 
-// Update warna LED berdasarkan arus
+// Update warna LED berdasarkan arus (VERSI DIPERBAIKI - tanpa error)
 function updateLEDColor(I_mA) {
   const ledSlot = document.querySelector('#slot-led');
   if (!ledSlot) return;
@@ -86,70 +84,21 @@ function updateLEDColor(I_mA) {
   
   if (I_mA > 0 && I_mA < 50) {
     color = "#fffc5f"; // Kuning sangat redup
-       
   } else if (I_mA >= 50 && I_mA < 150) {
     color = "#fc9653"; // Kuning
-      } else if (I_mA >= 150 && I_mA <= 200) {
+  } else if (I_mA >= 150 && I_mA <= 200) {
     color = "#ff3c01"; // Oranye terang
-      } else if (I_mA > 200) {
-    color = "#000000"; // Oranye merah (terlalu terang)
-   
-    
-  } 
+  } else if (I_mA > 200) {
+    color = "#000000"; // Hitam (burnout)
+    // LED berkedip jika arus terlalu tinggi
+    ledBulb.style.animation = 'blink 0.5s infinite alternate';
+  } else {
+    ledBulb.style.animation = 'none';
+  }
   
   // Terapkan perubahan warna fill
   ledBulb.setAttribute('fill', color);
-  
-  // Buat filter untuk glow effect
-  const filterId = `glow-${Date.now()}`;
-  
-  // Hapus filter lama jika ada
-  const oldFilter = document.getElementById('led-glow-filter');
-  if (oldFilter) oldFilter.remove();
-  
-  // Buat filter SVG baru untuk glow effect
-  const svgNS = "http://www.w3.org/2000/svg";
-  const filter = document.createElementNS(svgNS, "filter");
-  filter.setAttribute("id", filterId);
-  filter.setAttribute("x", "-50%");
-  filter.setAttribute("y", "-50%");
-  filter.setAttribute("width", "200%");
-  filter.setAttribute("height", "200%");
-  
-  const feGaussianBlur = document.createElementNS(svgNS, "feGaussianBlur");
-  feGaussianBlur.setAttribute("stdDeviation", glowIntensity.toString());
-  feGaussianBlur.setAttribute("result", "coloredBlur");
-  
-  const feMerge = document.createElementNS(svgNS, "feMerge");
-  const feMergeNode1 = document.createElementNS(svgNS, "feMergeNode");
-  feMergeNode1.setAttribute("in", "coloredBlur");
-  const feMergeNode2 = document.createElementNS(svgNS, "feMergeNode");
-  feMergeNode2.setAttribute("in", "SourceGraphic");
-  
-  feMerge.appendChild(feMergeNode1);
-  feMerge.appendChild(feMergeNode2);
-  
-  filter.appendChild(feGaussianBlur);
-  filter.appendChild(feMerge);
-  
-  // Tambahkan filter ke SVG
-  const svgElement = ledSlot.querySelector('svg');
-  if (svgElement) {
-    // Cek apakah sudah ada defs, jika tidak buat
-    let defs = svgElement.querySelector('defs');
-    if (!defs) {
-      defs = document.createElementNS(svgNS, "defs");
-      svgElement.insertBefore(defs, svgElement.firstChild);
-    }
-    defs.appendChild(filter);
-    
-    // Terapkan filter ke LED bulb
-    ledBulb.setAttribute('filter', `url(#${filterId})`);
-  }
-  
-  // Terapkan opacity untuk brightness
-  ledBulb.style.opacity = brightness.toString();
-  ledBulb.style.transition = "fill 0.5s ease, opacity 0.5s ease";
+  ledBulb.style.transition = "fill 0.5s ease";
 }
 
 // Fungsi untuk menghitung dan menampilkan hasil (HANYA saat tombol ditekan)
@@ -186,7 +135,7 @@ function calculateAndDisplay() {
   // Tidak menampilkan pesan hasil (toast dihapus)
 }
 
-// Event listener untuk input number
+// Event listener untuk input number (TANPA SYNC SLIDER)
 [vInput, rInput].forEach(input => {
   input.addEventListener('input', function() {
     const value = parseFloat(this.value);
@@ -197,29 +146,8 @@ function calculateAndDisplay() {
     if (value < min) this.value = min;
     if (value > max) this.value = max;
     
-    // Sync dengan slider
-    const sliderId = this.id.replace('input', 'slider');
-    const slider = document.getElementById(sliderId);
-    if (slider) {
-      slider.value = this.value;
-    }
-    
     // Reset tampilan saat nilai diubah (karena simulasi belum dijalankan)
     resetDisplay();
-  });
-});
-
-// Event listener untuk slider
-[vSlider, rSlider].forEach(slider => {
-  slider.addEventListener('input', function() {
-    const inputId = this.id.replace('slider', 'input');
-    const input = document.getElementById(inputId);
-    if (input) {
-      input.value = this.value;
-      
-      // Reset tampilan saat nilai diubah (karena simulasi belum dijalankan)
-      resetDisplay();
-    }
   });
 });
 

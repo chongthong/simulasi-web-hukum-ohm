@@ -108,7 +108,7 @@
           <div class="circuit-container">
             <div class="circuit-header">
               <h3>
-                <i class="fas fa-project-diagram"></i> Workstation Sirkuit
+                <i class="fas fa-project-diagram"></i> Workstation
               </h3>
               <div class="circuit-status" id="circuit-status">
                 <span class="status-dot"></span>
@@ -128,7 +128,6 @@
                   fill="#FFFFFF"
                   opacity="0.9"
                 />
-               
 
                 <!-- Circuit Traces -->
                 <path
@@ -175,13 +174,13 @@
                 class="drop-zone"
                 id="slot-resistor"
                 data-type="resistor"
-                style="top: 30px; left: 205px"
+                style="top: 40px; left: 205px"
               ></div>
               <div
                 class="drop-zone rotated-led"
                 id="slot-led"
                 data-type="led"
-                style="top: 110px; left: 353px"
+                style="top: 120px; left: 353px"
               ></div>
             </div>
 
@@ -202,17 +201,7 @@
                         min="1"
                         max="24"
                         step="0.5"
-                      />
-                    </div>
-                    <div class="input-slider">
-                      <input
-                        type="range"
-                        id="v-slider"
-                        min="1"
-                        max="24"
-                        value="9"
-                        step="0.5"
-                        class="slider"
+                        placeholder="Masukkan tegangan"
                       />
                     </div>
                   </div>
@@ -228,19 +217,9 @@
                         id="r-input"
                         value="100"
                         min="10"
-                        max="1000"
+                        max="100000"
                         step="10"
-                      />
-                    </div>
-                    <div class="input-slider">
-                      <input
-                        type="range"
-                        id="r-slider"
-                        min="10"
-                        max="1000"
-                        value="100"
-                        step="10"
-                        class="slider"
+                        placeholder="Masukkan resistansi"
                       />
                     </div>
                   </div>
