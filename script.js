@@ -236,3 +236,50 @@ document.addEventListener('DOMContentLoaded', () => {
   
   updateCircuitStatus();
 });
+
+// Tambahkan variabel global untuk menyimpan tipe yang sedang di-drag via sentuhan
+let touchType = null;
+let touchSourceId = null;
+
+draggables.forEach(item => {
+  // Dukungan untuk smartphone
+  item.addEventListener('touchstart', (e) => {
+    touchType = item.dataset.type;
+    touchSourceId = item.id;
+    item.style.opacity = '0.4';
+  }, { passive: true });
+
+  item.addEventListener('touchend', (e) => {
+    item.style.opacity = '1';
+    
+    // Ambil koordinat tempat jari dilepas
+    const touch = e.changedTouches[0];
+    const dropTarget = document.elementFromPoint(touch.clientX, touch.clientY);
+    
+    // Cari apakah target adalah drop-zone atau anak dari drop-zone
+    const zone = dropTarget ? dropTarget.closest('.drop-zone') : null;
+
+    if (zone && touchType === zone.dataset.type && !zone.classList.contains('filled')) {
+      const sourceElement = document.getElementById(touchSourceId);
+      const clone = sourceElement.querySelector('svg').cloneNode(true);
+      
+      zone.innerHTML = "";
+      zone.appendChild(clone);
+      zone.classList.add('filled');
+      
+      state[touchType] = true;
+      updateCircuitStatus();
+      resetDisplay();
+    }
+    
+    touchType = null;
+    touchSourceId = null;
+  });
+});
+
+// Mencegah scroll saat sedang men-drag komponen di HP
+document.addEventListener('touchmove', (e) => {
+  if (touchType) {
+    e.preventDefault();
+  }
+}, { passive: false });
