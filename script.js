@@ -1,14 +1,20 @@
+/**
+ * ElectroLab - Script Pro (Support Desktop & Mobile)
+ */
+
 // 1. State & Global Variables
 let state = { resistor: false, led: false, battery: true };
 let touchType = null;
 let touchSourceId = null;
+let ghostElement = null; // Elemen bayangan untuk mobile
 
+// Elemen DOM
 const draggables = document.querySelectorAll('.draggable');
 const dropZones = document.querySelectorAll('.drop-zone');
 const btnGenerate = document.getElementById('btn-generate');
 const vInput = document.getElementById('v-input');
 const rInput = document.getElementById('r-input');
-const iDisplay = document.getElementById('i-display');
+const pDisplay = document.getElementById('i-display'); // Output Daya (Watt)
 
 // 2. Fungsi Utama Penempatan (Desktop & Mobile)
 function handlePlacement(zone, type, sourceId) {
@@ -24,14 +30,13 @@ function handlePlacement(zone, type, sourceId) {
     updateCircuitStatus();
     resetDisplay();
     
-    // Beri getaran singkat jika HP mendukung
-    if (window.navigator.vibrate) window.navigator.vibrate(30);
+    if (window.navigator.vibrate) window.navigator.vibrate(50);
     return true;
   }
   return false;
 }
 
-// 3. Event Listeners: Desktop (Mouse)
+// 3. EVENT DESKTOP (Mouse)
 draggables.forEach(item => {
   item.addEventListener('dragstart', (e) => {
     e.dataTransfer.setData('type', item.dataset.type);
@@ -51,92 +56,145 @@ dropZones.forEach(zone => {
   });
 });
 
-// 4. TOUCH SUPPORT (MOBILE) - Versi Akurasi Tinggi
+// 4. EVENT TOUCH (Mobile) - Versi Ghost Drag
 draggables.forEach(item => {
   item.addEventListener('touchstart', (e) => {
+    const touch = e.touches[0];
     touchType = item.dataset.type;
     touchSourceId = item.id;
+    
+    // Buat bayangan komponen agar terlihat saat ditarik
+    ghostElement = item.querySelector('svg').cloneNode(true);
+    ghostElement.style.position = 'fixed';
+    ghostElement.style.width = '60px';
+    ghostElement.style.height = '60px';
+    ghostElement.style.opacity = '0.7';
+    ghostElement.style.pointerEvents = 'none';
+    ghostElement.style.zIndex = '1000';
+    ghostElement.style.left = touch.clientX - 30 + 'px';
+    ghostElement.style.top = touch.clientY - 30 + 'px';
+    document.body.appendChild(ghostElement);
+    
     item.style.opacity = '0.4';
-  }, { passive: true });
+  }, { passive: false });
+
+  item.addEventListener('touchmove', (e) => {
+    if (!ghostElement) return;
+    const touch = e.touches[0];
+    // Gerakkan bayangan mengikuti jari
+    ghostElement.style.left = touch.clientX - 30 + 'px';
+    ghostElement.style.top = touch.clientY - 30 + 'px';
+    e.preventDefault(); // Kunci layar agar tidak scroll saat narik
+  }, { passive: false });
 
   item.addEventListener('touchend', (e) => {
-    item.style.opacity = '1';
+    if (!ghostElement) return;
     
-    // Ambil koordinat jari terakhir
     const touch = e.changedTouches[0];
     const touchX = touch.clientX;
     const touchY = touch.clientY;
 
-    // Cek satu per satu drop zone apakah jari kita lepas di dalamnya
+    // Cek tabrakan dengan zona target
     dropZones.forEach(zone => {
       const rect = zone.getBoundingClientRect();
-      
-      // Deteksi tabrakan koordinat (Collision Detection)
       if (
-        touchX >= rect.left &&
-        touchX <= rect.right &&
-        touchY >= rect.top &&
-        touchY <= rect.bottom
+        touchX >= rect.left && touchX <= rect.right &&
+        touchY >= rect.top && touchY <= rect.bottom
       ) {
         handlePlacement(zone, touchType, touchSourceId);
       }
     });
 
+    // Bersihkan bayangan
+    if (ghostElement) {
+      ghostElement.remove();
+      ghostElement = null;
+    }
+    item.style.opacity = '1';
     touchType = null;
     touchSourceId = null;
   });
 });
 
-// Mencegah scroll layar saat narik komponen
-document.addEventListener('touchmove', (e) => {
-  if (touchType) e.preventDefault();
-}, { passive: false });
-
-// 5. Logika Simulasi & UI (Tetap Sama)
+// 5. Logika Simulasi & UI
 function updateCircuitStatus() {
   const statusDot = document.querySelector('.status-dot');
   const statusText = document.querySelector('.status-text');
   const circuitStatus = document.getElementById('circuit-status');
   const isComplete = state.resistor && state.led;
   
-  statusDot.style.background = isComplete ? '#4CAF50' : '#F44336';
-  statusText.textContent = isComplete ? 'Sirkuit Siap!' : 'Sirkuit Tidak Lengkap';
-  statusText.style.color = isComplete ? '#2E7D32' : '#D32F2F';
-  circuitStatus.style.background = isComplete ? '#E8F5E9' : '#FFEBEE';
+  if (isComplete) {
+    statusDot.style.background = '#4CAF50';
+    statusText.textContent = 'Sirkuit Siap!';
+    statusText.style.color = '#2E7D32';
+    circuitStatus.style.background = '#E8F5E9';
+    statusDot.style.animation = 'none';
+  } else {
+    statusDot.style.background = '#F44336';
+    statusText.textContent = 'Sirkuit Tidak Lengkap';
+    statusText.style.color = '#D32F2F';
+    circuitStatus.style.background = '#FFEBEE';
+    statusDot.style.animation = 'pulse 2s infinite';
+  }
 }
 
 function calculateAndDisplay() {
   if (!state.resistor || !state.led) return;
   const V = parseFloat(vInput.value);
   const R = parseFloat(rInput.value);
-  if (isNaN(V) || isNaN(R)) return;
+  if (isNaN(V) || isNaN(R) || R <= 0) return;
 
+  // HITUNG DAYA (P = V^2 / R)
+  const P_Watt = (V * V) / R;
+  pDisplay.textContent = P_Watt.toFixed(2);
+
+  // Arus tetap dihitung untuk visual LED (I = V / R)
   const I_mA = (V / R) * 1000;
-  iDisplay.textContent = I_mA.toFixed(2);
   updateLEDColor(I_mA);
 }
 
 function updateLEDColor(I_mA) {
-  const ledBulb = document.querySelector('.led-bulb');
-  if (!ledBulb) return;
+  // PENTING: Cari LED yang ada di dalam sirkuit, bukan yang di sidebar
+  const activeLED = document.querySelector('#slot-led .led-bulb');
+  if (!activeLED) return;
+
   let color = "#ffffff";
   if (I_mA > 0 && I_mA < 50) color = "#fffc5f";
   else if (I_mA >= 50 && I_mA < 150) color = "#fc9653";
   else if (I_mA >= 150 && I_mA <= 200) color = "#ff3c01";
-  else if (I_mA > 200) { color = "#000000"; ledBulb.style.animation = 'blink 0.5s infinite'; }
-  ledBulb.setAttribute('fill', color);
+  else if (I_mA > 200) {
+    color = "#000000";
+    activeLED.style.animation = 'blink 0.5s infinite alternate';
+  } else {
+    activeLED.style.animation = 'none';
+  }
+  
+  activeLED.setAttribute('fill', color);
+  activeLED.style.transition = "fill 0.5s ease";
 }
 
 function resetDisplay() {
-  iDisplay.textContent = '0.00';
-  const ledBulb = document.querySelector('.led-bulb');
-  if (ledBulb) { ledBulb.setAttribute('fill', '#FFFFFF'); ledBulb.style.animation = 'none'; }
+  pDisplay.textContent = '0.00';
+  const activeLED = document.querySelector('#slot-led .led-bulb');
+  if (activeLED) {
+    activeLED.setAttribute('fill', '#FFFFFF');
+    activeLED.style.animation = 'none';
+  }
 }
 
+// Event Listeners Input
 [vInput, rInput].forEach(input => {
-  input.addEventListener('input', resetDisplay);
+  input.addEventListener('input', () => {
+    resetDisplay();
+  });
 });
 
-btnGenerate.addEventListener('click', calculateAndDisplay);
+btnGenerate.addEventListener('click', () => {
+  btnGenerate.classList.add('clicked');
+  setTimeout(() => btnGenerate.classList.remove('clicked'), 300);
+  calculateAndDisplay();
+});
 
-document.addEventListener('DOMContentLoaded', updateCircuitStatus);
+document.addEventListener('DOMContentLoaded', () => {
+  updateCircuitStatus();
+});
